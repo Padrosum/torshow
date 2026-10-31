@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Tor Circuit desktop widget control: start | stop | toggle | status
+set -euo pipefail
+unit="tor-circuit-widget.service"
+
+case "${1:-toggle}" in
+start) systemctl --user start "$unit" ;;
+stop) systemctl --user stop "$unit" ;;
+toggle)
+    if systemctl --user is-active --quiet "$unit"; then
+        systemctl --user stop "$unit"
+    else
+        systemctl --user start "$unit"
+    fi
+    ;;
+status) systemctl --user is-active "$unit" ;;
+*)
+    echo "usage: $(basename "$0") [start|stop|toggle|status]" >&2
+    exit 2
+    ;;
+esac
